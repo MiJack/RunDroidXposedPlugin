@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id=" @+id/menu_reset_methods"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:showAsAction="always"
+        android:title="reset methods" />
+    <item
+        android:id=" @+id/menu_add_method"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="always"
+        android:title="添加拦截方法" />
+
+</menu>
