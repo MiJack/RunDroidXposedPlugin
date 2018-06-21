@@ -20,7 +20,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  */
 public class XposedLoadPackageHook implements IXposedHookLoadPackage {
 
-
+    public static final String XPOSED_PLUGIN_PACKAGE = "com.mijack.xposed";
     public static final Set<String> EMPTY_SET = new HashSet<String>();
     public static final String FRAMEWORK = "android";
     public static final String TARGET_APPS = "targetApps";
@@ -30,8 +30,7 @@ public class XposedLoadPackageHook implements IXposedHookLoadPackage {
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam)
             throws Throwable {
         XposedBridge.log("load process:" + lpparam.processName);
-        prefs = new XSharedPreferences(XposedLoadPackageHook.getPackageName());
-//        XposedBridge.log("prefs path:" + prefs.getFile().getAbsolutePath());
+        prefs = new XSharedPreferences(XPOSED_PLUGIN_PACKAGE);
         if ("android".equals(lpparam.processName)) {
             return;
         }
@@ -50,6 +49,12 @@ public class XposedLoadPackageHook implements IXposedHookLoadPackage {
         hookApplicationMethods(lpparam, FRAMEWORK);
         //load app hook
         hookApplicationMethods(lpparam, lpparam.packageName);
+        //load x-log hook
+        hookXLogMethods(lpparam, lpparam.packageName);
+
+    }
+
+    private void hookXLogMethods(XC_LoadPackage.LoadPackageParam lpparam, String packageName) {
 
     }
 
@@ -108,7 +113,8 @@ public class XposedLoadPackageHook implements IXposedHookLoadPackage {
         System.arraycopy(split, 2, argsType, 0, argsType.length);
         Class clazz = lpparam.classLoader.loadClass(split[0]);
         String methodName = split[1];
-        Object[] argArray = new Object[split.length - 1];//最后一位是MethodHook
+        //最后一位是MethodHook
+        Object[] argArray = new Object[split.length - 1];
         for (int i = 0; i < argArray.length - 1; i++) {
             argArray[i] = loadClass(split[i + 2], lpparam);
         }

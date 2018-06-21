@@ -40,7 +40,7 @@ public class DebugAppListActivity extends Activity implements AdapterView.OnItem
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = getSharedPreferences();
         Set<String> appList = sharedPreferences.getStringSet(XposedLoadPackageHook.TARGET_APPS,
-                new HashSet<>());
+                new HashSet<String>());
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +57,7 @@ public class DebugAppListActivity extends Activity implements AdapterView.OnItem
 
     private SharedPreferences getSharedPreferences() {
         String preferenceName = XposedUtils.getPreferenceName();
-        return getSharedPreferences(preferenceName, Context.MODE_WORLD_READABLE);
+        return getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -77,25 +77,31 @@ public class DebugAppListActivity extends Activity implements AdapterView.OnItem
     }
 
     private void showAddAppDialog() {
-        View addView = LayoutInflater.from(this).inflate(R.layout.dialog_add_app, null);
+        final View addView = LayoutInflater.from(this).inflate(R.layout.dialog_add_app, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("添加app")
                 .setView(addView)
-                .setNegativeButton("添加", (dialog, which) -> {
-                    if (addView == null) {
-                        return;
-                    }
-                    EditText editText = addView.findViewById(R.id.editTextApp);
-                    if (TextUtils.isEmpty(editText.getText())) {
-                        Toast.makeText(DebugAppListActivity.this, "请输入app名称", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    String app = editText.getText().toString();
-                    addApp(app);
-                })
-                .setPositiveButton("取消", (dialog, which) -> {
-                    return;
+                .setNegativeButton("添加", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (addView == null) {
+                            return;
+                        }
+                        EditText editText = addView.findViewById(R.id.editTextApp);
+                        if (TextUtils.isEmpty(editText.getText())) {
+                            Toast.makeText(DebugAppListActivity.this, "请输入app名称", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String app = editText.getText().toString();
+                        addApp(app);
 
+                    }
+                })
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
                 })
                 .create().show();
     }
@@ -124,15 +130,24 @@ public class DebugAppListActivity extends Activity implements AdapterView.OnItem
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         // remove
         View removeView = LayoutInflater.from(this).inflate(R.layout.dialog_remove_app, null);
-        String app = appAdapter.getItem(position);
+        final String app = appAdapter.getItem(position);
         TextView textView = removeView.findViewById(R.id.textApp);
         textView.setText(app);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("移除app")
                 .setView(removeView)
-                .setNegativeButton("移除", (dialog, which) -> removeApp(app))
-                .setPositiveButton("取消", (DialogInterface dialog, int which) -> {
+                .setNegativeButton("移除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeApp(app);
+                    }
+                })
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
                 })
                 .create().show();
         return true;
@@ -147,7 +162,7 @@ public class DebugAppListActivity extends Activity implements AdapterView.OnItem
     private void showAppHookMethodList(String app) {
 
         Intent intent = new Intent(this, MethodListActivity.class);
-        intent.putExtra(MethodListActivity.APP_NAME,app);
+        intent.putExtra(MethodListActivity.APP_NAME, app);
         startActivity(intent);
     }
 }

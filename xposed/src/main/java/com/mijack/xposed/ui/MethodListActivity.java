@@ -53,7 +53,7 @@ public class MethodListActivity extends Activity implements AdapterView.OnItemLo
         setTitle(appName);
 
         SharedPreferences sharedPreferences = getSharedPreferences();
-        Set<String> appList = sharedPreferences.getStringSet(appName, new HashSet<>());
+        Set<String> appList = sharedPreferences.getStringSet(appName, new HashSet<String>());
         listView = findViewById(R.id.method_list);
 
         methodNameAdapter.setData(appList);
@@ -63,7 +63,7 @@ public class MethodListActivity extends Activity implements AdapterView.OnItemLo
 
     private SharedPreferences getSharedPreferences() {
         String preferenceName = XposedUtils.getPreferenceName();
-        return getSharedPreferences(preferenceName, Context.MODE_WORLD_READABLE);
+        return getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -92,37 +92,48 @@ public class MethodListActivity extends Activity implements AdapterView.OnItemLo
         }
         new AlertDialog.Builder(getContext()).setTitle("添加系统默认拦截方法")
                 .setMessage(sb.toString())
-                .setNegativeButton("添加", (dialog, which) -> {
-                    addMethodNames(Arrays.asList(methodList));
+                .setNegativeButton("添加", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addMethodNames(Arrays.asList(methodList));
+                    }
                 })
-                .setPositiveButton("取消", (dialog, which) -> {
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
                 }).create().show();
 
     }
 
     private void showAddMethodDialog() {
-        View addView = LayoutInflater.from(this).inflate(R.layout.dialog_add_method, null);
+        final View addView = LayoutInflater.from(this).inflate(R.layout.dialog_add_method, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("添加方法名")
                 .setView(addView)
-                .setNegativeButton("添加", (dialog, which) -> {
-                    if (addView == null) {
-                        return;
+                .setNegativeButton("添加", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (addView == null) {
+                            return;
+                        }
+                        EditText editText = addView.findViewById(R.id.editTextApp);
+                        if (TextUtils.isEmpty(editText.getText())) {
+                            Toast.makeText(MethodListActivity.this, "请输入方法名", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        List<String> methodNames = new ArrayList<>();
+                        for (String methodName : editText.getText().toString().split(";")) {
+                            methodNames.add(methodName);
+                        }
+                        addMethodNames(methodNames);
                     }
-                    EditText editText = addView.findViewById(R.id.editTextApp);
-                    if (TextUtils.isEmpty(editText.getText())) {
-                        Toast.makeText(MethodListActivity.this, "请输入方法名", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    List<String> methodNames = new ArrayList<>();
-                    for (String methodName : editText.getText().toString().split(";")) {
-                        methodNames.add(methodName);
-                    }
-                    addMethodNames(methodNames);
                 })
-                .setPositiveButton("取消", (dialog, which) -> {
-                    return;
-
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
                 })
                 .create().show();
     }
@@ -151,15 +162,24 @@ public class MethodListActivity extends Activity implements AdapterView.OnItemLo
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         // remove
         View removeView = LayoutInflater.from(this).inflate(R.layout.dialog_remove_method, null);
-        String methodName = methodNameAdapter.getItem(position);
+        final String methodName = methodNameAdapter.getItem(position);
         TextView textView = removeView.findViewById(R.id.textApp);
         textView.setText(methodName);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("移除方法名")
                 .setView(removeView)
-                .setNegativeButton("移除", (dialog, which) -> removeMethodName(methodName))
-                .setPositiveButton("取消", (DialogInterface dialog, int which) -> {
+                .setNegativeButton("移除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeMethodName(methodName);
+                    }
+                })
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
                 })
                 .create().show();
         return true;
