@@ -1,9 +1,4 @@
 apply plugin: 'com.android.library'
-//启用Jitpack 插件
-apply plugin: 'com.github.dcendents.android-maven'
-
-//设置Jitpack发布的Group
-group='com.github.mijack'
 
 android {
     compileSdkVersion 26
@@ -30,5 +25,4 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    implementation 'com.github.pqpo:Log4a:v1.4.0'
 }
