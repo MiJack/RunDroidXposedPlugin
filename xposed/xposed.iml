@@ -107,6 +107,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: de.robv.android.xposed:api:82@jar" level="project" />
     <orderEntry type="library" name="Gradle: de.robv.android.xposed:api:82:sources@jar" level="project" />
-    <orderEntry type="module" module-name="xlog" />
+    <orderEntry type="module" module-name="log4a" />
   </component>
 </module>

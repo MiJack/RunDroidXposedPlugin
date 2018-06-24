@@ -1,10 +1,12 @@
 package com.mijack.xposed;
 
-import com.mijack.Xlog;
+
+import com.mijack.xposed.log.Xlog;
 
 import de.robv.android.xposed.XC_MethodHook;
 
-import static com.mijack.XlogUtils.method2String;
+import static com.mijack.xposed.log.XlogUtils.method2String;
+
 
 /**
  * Created by Mr.Yuan on 2017/2/23.

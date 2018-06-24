@@ -2,7 +2,9 @@ package com.mijack.xposed;
 
 import android.text.TextUtils;
 
-import com.mijack.XlogUtils;
+
+import com.mijack.xposed.log.SystemLogHookCallBack;
+import com.mijack.xposed.log.XlogUtils;
 
 import java.lang.reflect.Array;
 import java.util.HashSet;
@@ -55,6 +57,17 @@ public class XposedLoadPackageHook implements IXposedHookLoadPackage {
     }
 
     private void hookXLogMethods(XC_LoadPackage.LoadPackageParam lpparam, String packageName) {
+        try {
+            SystemLogHookCallBack callBack = new SystemLogHookCallBack();
+            Class clazz = lpparam.classLoader.loadClass("com.mijack.LogWriter");
+            String methodName = "d";
+            Object[] argArray = new Object[]{int.class, int.class, int.class, String.class, callBack};
+            XposedHelpers.findAndHookMethod(clazz, methodName, argArray);
+            XposedBridge.log("hook 应用日志成功");
+        } catch (ClassNotFoundException e) {
+            XposedBridge.log("hook 应用日志失败");
+        }
+
 
     }
 

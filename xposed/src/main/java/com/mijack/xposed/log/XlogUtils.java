@@ -1,10 +1,10 @@
-package com.mijack;
+package com.mijack.xposed.log;
 
 import android.content.ComponentName;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.RemoteException;
 import android.os.Process;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -19,8 +19,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
-import static com.mijack.XlogBuilder.KEY_TO_VALUE;
-import static com.mijack.XlogBuilder.KEY_TO_VALUE2;
+import static com.mijack.xposed.log.XlogBuilder.KEY_TO_VALUE;
+import static com.mijack.xposed.log.XlogBuilder.KEY_TO_VALUE2;
 
 /**
  * @author Mr.Yuan
@@ -209,8 +209,9 @@ public class XlogUtils {
                 Class<?>[] params = method.getParameterTypes();
                 for (int j = 0; j < params.length; j++) {
                     sb.append(getTypeName(params[j]));
-                    if (j < (params.length - 1))
+                    if (j < (params.length - 1)) {
                         sb.append(',');
+                    }
                 }
                 sb.append(')');
                 return sb.toString();
@@ -223,8 +224,9 @@ public class XlogUtils {
                 Class<?>[] params = constructor.getParameterTypes();
                 for (int j = 0; j < params.length; j++) {
                     sb.append(getTypeName(params[j]));
-                    if (j < (params.length - 1))
+                    if (j < (params.length - 1)) {
                         sb.append(",");
+                    }
                 }
                 sb.append(")");
                 return sb.toString();

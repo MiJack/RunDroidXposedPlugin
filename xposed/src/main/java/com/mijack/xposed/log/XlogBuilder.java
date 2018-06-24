@@ -1,4 +1,4 @@
-package com.mijack;
+package com.mijack.xposed.log;
 
 /**
  * @author Mi&Jack

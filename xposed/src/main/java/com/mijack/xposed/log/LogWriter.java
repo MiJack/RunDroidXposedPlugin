@@ -1,4 +1,4 @@
-package com.mijack;
+package com.mijack.xposed.log;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -58,13 +58,14 @@ public class LogWriter {
         int processId = XlogUtils.getProcessId();
         String processName = XlogUtils.getProcessName();
         String fileName = null;
-        if (hookId > 0) {
-            fileName = "/data/data/" + processName + "/files/"
-                    + processName + "_system_" + processId + ".log";
-        } else {
+        // todo 如果日志的产生均在xposed中，忽略hookId
+//        if (hookId > 0) {
+//            fileName = "/data/data/" + processName + "/files/"
+//                    + processName + "_system_" + processId + ".log";
+//        } else {
             fileName = "/data/data/" + processName + "/files/"
                     + processName + "_" + processId + ".log";
-        }
+//        }
         File file = new File(fileName);
         if (!file.exists()) {
             // check parent folder
