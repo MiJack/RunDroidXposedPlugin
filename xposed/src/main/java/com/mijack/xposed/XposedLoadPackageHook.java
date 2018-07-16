@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 
 import com.mijack.xposed.log.SystemLogHookCallBack;
+import com.mijack.xposed.log.XlogBuilder;
 import com.mijack.xposed.log.XlogUtils;
 
 import java.lang.reflect.Array;
@@ -23,6 +24,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class XposedLoadPackageHook implements IXposedHookLoadPackage {
 
     public static final String XPOSED_PLUGIN_PACKAGE = "com.mijack.xposed";
+    public static final String KEY_IS_LOG_STATE = "is_log_state";
+    public static final String KEY_DEBUG_STATE = "debug_state";
     public static final Set<String> EMPTY_SET = new HashSet<String>();
     public static final String FRAMEWORK = "android";
     public static final String TARGET_APPS = "targetApps";
@@ -36,11 +39,23 @@ public class XposedLoadPackageHook implements IXposedHookLoadPackage {
         if ("android".equals(lpparam.processName)) {
             return;
         }
-        prefs.makeWorldReadable();
+        boolean makeWorldReadable = prefs.makeWorldReadable();
+        XposedBridge.log("makeWorldReadable：" + makeWorldReadable);
+        XlogBuilder.IS_LOG_STATE = prefs.getBoolean(KEY_IS_LOG_STATE, false);
+        XposedBridge.log("is log state:" + XlogBuilder.IS_LOG_STATE);
+        XlogBuilder.DEBUG_STATE = prefs.getBoolean(KEY_DEBUG_STATE, false);
+        XposedBridge.log("debug state:" + XlogBuilder.DEBUG_STATE);
 
         Set<String> targetApps = prefs.getStringSet(TARGET_APPS, EMPTY_SET);
-
-        if (!targetApps.contains(lpparam.packageName)) {
+        XposedBridge.log("Target app size:" + targetApps.size());
+        boolean isHit = false;
+        for (String app : targetApps) {
+            XposedBridge.log("Target app:" + app);
+            if (app.equals(lpparam.packageName)) {
+                isHit = true;
+            }
+        }
+        if (!isHit) {
             XposedBridge.log("不加载apk\n" + "包名: " + lpparam.packageName);
             // 不可加载应用
             return;

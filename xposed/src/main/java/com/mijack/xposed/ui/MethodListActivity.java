@@ -1,6 +1,5 @@
 package com.mijack.xposed.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mijack.xposed.R;
-import com.mijack.xposed.XposedUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +27,7 @@ import java.util.Set;
 /**
  * @author Mi&Jack
  */
-public class MethodListActivity extends Activity implements AdapterView.OnItemLongClickListener {
+public class MethodListActivity extends BaseActivity {
     public static final String APP_NAME = "APP_NAME";
     ListView listView;
     StringDataAdapter methodNameAdapter = new StringDataAdapter();
@@ -59,11 +57,6 @@ public class MethodListActivity extends Activity implements AdapterView.OnItemLo
         methodNameAdapter.setData(appList);
         listView.setAdapter(methodNameAdapter);
         listView.setOnItemLongClickListener(this);
-    }
-
-    private SharedPreferences getSharedPreferences() {
-        String preferenceName = XposedUtils.getPreferenceName();
-        return getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -128,6 +121,7 @@ public class MethodListActivity extends Activity implements AdapterView.OnItemLo
                             methodNames.add(methodName);
                         }
                         addMethodNames(methodNames);
+                        Toast.makeText(MethodListActivity.this, "提交成功", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setPositiveButton("取消", new DialogInterface.OnClickListener() {
@@ -154,9 +148,6 @@ public class MethodListActivity extends Activity implements AdapterView.OnItemLo
         sharedPreferences.edit().putStringSet(appName, methodNameList).apply();
     }
 
-    public Context getContext() {
-        return this;
-    }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

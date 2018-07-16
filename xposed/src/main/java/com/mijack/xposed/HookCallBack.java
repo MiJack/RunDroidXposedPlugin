@@ -26,9 +26,9 @@ public class HookCallBack extends XC_MethodHook {
     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
         super.beforeHookedMethod(param);
         if (!isStatic) {
-            Xlog.logSystemMethodEnter(System.identityHashCode(param), method2String(param.method), param.thisObject, param.args);
+            Xlog.logSystemMethodEnter(System.identityHashCode(param), param.method, param.thisObject, param.args);
         } else {
-            Xlog.logSystemStaticMethodEnter(System.identityHashCode(param), method2String(param.method), param.args);
+            Xlog.logSystemStaticMethodEnter(System.identityHashCode(param), param.method, param.args);
         }
     }
 
@@ -36,13 +36,13 @@ public class HookCallBack extends XC_MethodHook {
     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
         boolean hasThrowable = param.hasThrowable();
         if (isStatic && hasThrowable) {
-            Xlog.logSystemStaticMethodExitWithThrowable(System.identityHashCode(param), method2String(param.method), param.getThrowable());
+            Xlog.logSystemStaticMethodExitWithThrowable(System.identityHashCode(param), param.method, param.getThrowable());
         } else if (isStatic && !hasThrowable) {
-            Xlog.logSystemStaticMethodExitWithResult(System.identityHashCode(param), method2String(param.method), param.getResult());
+            Xlog.logSystemStaticMethodExitWithResult(System.identityHashCode(param), param.method, param.getResult());
         } else if (!isStatic && hasThrowable) {
-            Xlog.logSystemMethodExitWithThrowable(System.identityHashCode(param), method2String(param.method), param.thisObject, param.getThrowable());
+            Xlog.logSystemMethodExitWithThrowable(System.identityHashCode(param), param.method, param.thisObject, param.getThrowable());
         } else {
-            Xlog.logSystemMethodExitWithResult(System.identityHashCode(param), method2String(param.method), param.thisObject, param.getResult());
+            Xlog.logSystemMethodExitWithResult(System.identityHashCode(param), param.method, param.thisObject, param.getResult());
         }
     }
 

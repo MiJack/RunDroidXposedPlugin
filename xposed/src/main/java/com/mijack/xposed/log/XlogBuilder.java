@@ -1,9 +1,15 @@
 package com.mijack.xposed.log;
 
+import java.lang.reflect.Member;
+
+import de.robv.android.xposed.XposedBridge;
+
 /**
  * @author Mi&Jack
  */
 public class XlogBuilder {
+    public static boolean IS_LOG_STATE = false;
+    public static boolean DEBUG_STATE = false;
 
     public enum MethodType {
         USER_STATIC_METHOD(1), USER_NOT_STATIC_METHOD(2),
@@ -30,10 +36,10 @@ public class XlogBuilder {
         NO_THING, HAS_RESULT, HAS_THROWABLE
     }
 
-    public static void logMethodEnterInfo(int hookId, MethodType methodType, String methodSign, Object instance, Object... args) {
+    public static void logMethodEnterInfo(int hookId, MethodType methodType, Member method, Object instance, Object... args) {
         int pid = XlogUtils.getProcessId();
         int threadId = XlogUtils.getCurrentThreadId();
-
+        String methodSign = XlogUtils.method2String(method);
         StringBuilder sb = new StringBuilder("{").append(String.format(KEY_TO_VALUE, "logType", LOG_TYPE_ENTER));
         sb.append(",").append(String.format(KEY_TO_VALUE, "time", XlogUtils.currentTime()));
         sb.append(",").append(String.format(KEY_TO_VALUE, "processName", XlogUtils.getProcessName()));
@@ -50,15 +56,35 @@ public class XlogBuilder {
             sb.append(",").append(String.format(KEY_TO_VALUE2, "instance", XlogUtils.object2String(instance)));
         }
         sb.append(",").append(XlogUtils.paramsToString(args));
+        if (IS_LOG_STATE) {
+            try {
+                XlogStater.StateMethodType stateType = XlogStater.getStateType(method);
+                XposedBridge.log("StateMethodType " + methodSign + " -> " + stateType);
+                switch (stateType) {
+                    case ACTIVITY:
+                        sb.append(",").append(XlogStater.activityState(instance, args));
+                        break;
+                    case ON_CLICK:
+                        sb.append(",").append(XlogStater.widgetState(instance, args));
+                        break;
+                    case NO_LOG:
+                    default:
+                        // do nothing
+                }
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
         sb.append("}");
         LogWriter.d(hookId, pid, threadId, sb.toString());
     }
 
-    public static void logMethodExitInfo(int hookId, MethodType methodType, String methodSign,
+    public static void logMethodExitInfo(int hookId, MethodType methodType, Member method,
                                          Object instance, MethodExecuteResultType resultType, Object result, Throwable throwable) {
 
         int pid = XlogUtils.getProcessId();
         int threadId = XlogUtils.getCurrentThreadId();
+        String methodSign = XlogUtils.method2String(method);
 
         StringBuilder sb = new StringBuilder("{").append(String.format(KEY_TO_VALUE, "logType", LOG_TYPE_EXIT));
         sb.append(",").append(String.format(KEY_TO_VALUE, "time", XlogUtils.currentTime()));

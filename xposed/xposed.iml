@@ -91,7 +91,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaPrecompile" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
@@ -105,6 +104,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: com.github.MiJack:StatableLibrary:v0.2@jar" level="project" />
     <orderEntry type="library" name="Gradle: de.robv.android.xposed:api:82@jar" level="project" />
     <orderEntry type="library" name="Gradle: de.robv.android.xposed:api:82:sources@jar" level="project" />
     <orderEntry type="module" module-name="log4a" />

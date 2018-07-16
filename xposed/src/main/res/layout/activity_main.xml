@@ -14,6 +14,17 @@
         android:layout_height="wrap_content"
         android:text="查看系统hook的方法" />
 
+    <Switch
+        android:id="@+id/state_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="开启状态日志" />
+    <Switch
+        android:id="@+id/debug_app_list_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="打印app列表日志" />
+
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"

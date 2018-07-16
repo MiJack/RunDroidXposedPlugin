@@ -1,8 +1,6 @@
 package com.mijack.xposed.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,25 +11,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mijack.xposed.R;
 import com.mijack.xposed.XposedLoadPackageHook;
-import com.mijack.xposed.XposedUtils;
 
 import java.util.HashSet;
 
 import java.util.Set;
 
+import static com.mijack.xposed.XposedLoadPackageHook.KEY_IS_LOG_STATE;
+import static com.mijack.xposed.XposedLoadPackageHook.KEY_DEBUG_STATE;
+
 
 /**
  * @author Mi&Jack
  */
-public class DebugAppListActivity extends Activity implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+public class DebugAppListActivity extends BaseActivity implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
     ListView listView;
+    Switch stateSwitcher;
+    Switch debugAppListSwitcher;
     StringDataAdapter appAdapter = new StringDataAdapter();
 
     @Override
@@ -48,16 +52,19 @@ public class DebugAppListActivity extends Activity implements AdapterView.OnItem
             }
         });
         listView = findViewById(R.id.list);
+        stateSwitcher = findViewById(R.id.state_switcher);
+        debugAppListSwitcher = findViewById(R.id.debug_app_list_switcher);
 
+        boolean isLogState = sharedPreferences.getBoolean(KEY_IS_LOG_STATE, false);
+        boolean debugState = sharedPreferences.getBoolean(KEY_DEBUG_STATE, false);
+        stateSwitcher.setChecked(isLogState);
+        stateSwitcher.setOnCheckedChangeListener(this);
+        debugAppListSwitcher.setChecked(debugState);
+        debugAppListSwitcher.setOnCheckedChangeListener(this);
         appAdapter.setData(appList);
         listView.setAdapter(appAdapter);
         listView.setOnItemLongClickListener(this);
         listView.setOnItemClickListener(this);
-    }
-
-    private SharedPreferences getSharedPreferences() {
-        String preferenceName = XposedUtils.getPreferenceName();
-        return getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -122,10 +129,6 @@ public class DebugAppListActivity extends Activity implements AdapterView.OnItem
         sharedPreferences.edit().putStringSet(XposedLoadPackageHook.TARGET_APPS, appList).apply();
     }
 
-    public Context getContext() {
-        return this;
-    }
-
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         // remove
@@ -164,5 +167,17 @@ public class DebugAppListActivity extends Activity implements AdapterView.OnItem
         Intent intent = new Intent(this, MethodListActivity.class);
         intent.putExtra(MethodListActivity.APP_NAME, app);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.debug_app_list_switcher:
+                getSharedPreferences().edit().putBoolean(KEY_DEBUG_STATE, isChecked).commit();
+                return;
+            case R.id.state_switcher:
+                getSharedPreferences().edit().putBoolean(KEY_IS_LOG_STATE, isChecked).commit();
+                return;
+        }
     }
 }
