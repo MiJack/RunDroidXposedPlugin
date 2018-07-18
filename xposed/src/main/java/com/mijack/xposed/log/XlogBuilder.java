@@ -59,13 +59,16 @@ public class XlogBuilder {
         if (IS_LOG_STATE) {
             try {
                 XlogStater.StateMethodType stateType = XlogStater.getStateType(method);
-                XposedBridge.log("StateMethodType " + methodSign + " -> " + stateType);
                 switch (stateType) {
                     case ACTIVITY:
-                        sb.append(",").append(XlogStater.activityState(instance, args));
+                        sb.append(",").append(
+                                String.format(KEY_TO_VALUE2,
+                                        "state",XlogStater.activityState(instance,args)));
                         break;
                     case ON_CLICK:
-                        sb.append(",").append(XlogStater.widgetState(instance, args));
+                        sb.append(",").append(
+                                String.format(KEY_TO_VALUE2,
+                                        "state",XlogStater.widgetState(instance,args)));
                         break;
                     case NO_LOG:
                     default:

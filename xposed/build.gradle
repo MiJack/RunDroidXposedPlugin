@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-
-
     defaultConfig {
         applicationId "com.mijack.xposed"
         minSdkVersion 15
@@ -11,18 +9,17 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly 'de.robv.android.xposed:api:82:sources'
     compileOnly 'com.github.MiJack:StatableLibrary:v0.2'

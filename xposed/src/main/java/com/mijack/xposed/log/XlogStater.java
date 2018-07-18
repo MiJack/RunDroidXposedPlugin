@@ -45,7 +45,7 @@ public class XlogStater {
                 sb.append(",");
             }
             Field field = declaredFields[i];
-            if (field.isAccessible()) {
+            if (!field.isAccessible()) {
                 field.setAccessible(true);
             }
             try {
