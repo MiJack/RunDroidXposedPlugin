@@ -67,10 +67,42 @@ public class XposedLoadPackageHook implements IXposedHookLoadPackage {
         //load app hook
         hookApplicationMethods(lpparam, lpparam.packageName);
         //load x-log hook
-        hookXLogMethods(lpparam, lpparam.packageName);
+        hookEmptyLogMethods(lpparam, lpparam.packageName);
 
     }
 
+    private void hookEmptyLogMethods(XC_LoadPackage.LoadPackageParam lpparam, String packageName) {
+        try {
+            // logMethodEnterInfo(int hookId, MethodType methodType, String methodSign,
+            // Object instance, Object... args)
+            Class xlogBuilderClazz = lpparam.classLoader.loadClass("com.mijack.XlogBuilder");
+            Class<?> methodTypeClazz = lpparam.classLoader.loadClass("com.mijack.XlogBuilder$MethodType");
+            Class<?> resultTypeClazz = lpparam.classLoader.loadClass("com.mijack.XlogBuilder$MethodExecuteResultType");
+
+            EmptyMethodEnterLogHookCallBack enterLogHook = new EmptyMethodEnterLogHookCallBack();
+            String enterLogMethodName = "logMethodEnterInfo";
+            Object[] enterLogArgArray = new Object[]{int.class, methodTypeClazz, String.class, Object.class, Object[].class,
+                    enterLogHook};
+            XposedHelpers.findAndHookMethod(xlogBuilderClazz, enterLogMethodName, enterLogArgArray);
+
+            //  logMethodExitInfo(int hookId, MethodType methodType, String methodSign,
+            //                                         Object instance, MethodExecuteResultType resultType, Object result, Throwable throwable) {
+            //
+            EmptyMethodExitLogHookCallBack methodExitLogHookCallBack = new EmptyMethodExitLogHookCallBack();
+            String exitLogMethodName = "logMethodExitInfo";
+            Object[] exitLogArgArray = new Object[]{int.class, methodTypeClazz, String.class, Object.class, resultTypeClazz,
+                    Object.class, Throwable.class,
+                    methodExitLogHookCallBack};
+            XposedHelpers.findAndHookMethod(xlogBuilderClazz, exitLogMethodName, exitLogArgArray);
+
+
+            XposedBridge.log("hook 应用日志成功");
+        } catch (ClassNotFoundException e) {
+            XposedBridge.log("hook 应用日志失败");
+        }
+    }
+
+    @Deprecated
     private void hookXLogMethods(XC_LoadPackage.LoadPackageParam lpparam, String packageName) {
         try {
             SystemLogHookCallBack callBack = new SystemLogHookCallBack();
@@ -158,12 +190,16 @@ public class XposedLoadPackageHook implements IXposedHookLoadPackage {
     }
 
     private Class loadClass(String type, XC_LoadPackage.LoadPackageParam lpparam) throws ClassNotFoundException {
+        return loadClass(type, lpparam.classLoader);
+    }
+
+    public static Class loadClass(String type, ClassLoader classLoader) throws ClassNotFoundException {
         int lastIndexOf = type.lastIndexOf("[");
         int dimens = lastIndexOf + 1;
         if (dimens > 0) {
             String rawType = type.substring(dimens);
             int[] ds = new int[dimens];
-            return Array.newInstance(loadClass(rawType, lpparam), ds).getClass();
+            return Array.newInstance(loadClass(rawType, classLoader), ds).getClass();
         }
         if (boolean.class.getName().equals(type)) {
             return boolean.class;
@@ -182,7 +218,7 @@ public class XposedLoadPackageHook implements IXposedHookLoadPackage {
         } else if (short.class.getName().equals(type)) {
             return short.class;
         } else {
-            return lpparam.classLoader.loadClass(type);
+            return classLoader.loadClass(type);
         }
     }
 
