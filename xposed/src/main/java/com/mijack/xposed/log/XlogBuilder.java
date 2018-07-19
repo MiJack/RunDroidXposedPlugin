@@ -75,7 +75,7 @@ public class XlogBuilder {
                         // do nothing
                 }
             } catch (Throwable throwable) {
-                throwable.printStackTrace();
+
             }
         }
         sb.append("}");
