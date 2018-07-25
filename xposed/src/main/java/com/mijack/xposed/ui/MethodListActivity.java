@@ -1,7 +1,6 @@
 package com.mijack.xposed.ui;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,7 +30,7 @@ public class MethodListActivity extends BaseActivity {
     public static final String APP_NAME = "APP_NAME";
     ListView listView;
     StringDataAdapter methodNameAdapter = new StringDataAdapter();
-    private String[] methodList = new String[]{
+    private String[] systemMethodList = new String[]{
             "android.app.Activity onCreate android.os.Bundle",
             "android.app.Activity onStart",
             "android.app.Activity onResume",
@@ -40,6 +39,13 @@ public class MethodListActivity extends BaseActivity {
             "android.app.Activity onDestroy",
             "java.lang.Thread start",
             "android.view.View setOnClickListener android.view.View$OnClickListener"
+    };
+    private String[] asyncTaskMethodList = new String[]{
+            "android.os.AsyncTask execute [java.langObject",
+            "android.os.AsyncTask publishProgress [java.langObject",
+            "android.os.Handler enqueueMessage android.os.MessageQueue android.os.Message long",
+            "android.os.Handler dispatchMessage android.os.Message",
+            "android.os.AsyncTask executeOnExecutor java.util.concurrent.Executor [java.lang.Object"
     };
     private String appName;
 
@@ -68,8 +74,11 @@ public class MethodListActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_reset_methods:
-                showResetMethodsDialog();
+            case R.id.menu_system_methods:
+                showResetMethodsDialog(systemMethodList);
+                return true;
+            case R.id.menu_handler_methods:
+                showResetMethodsDialog(asyncTaskMethodList);
                 return true;
             case R.id.menu_add_method:
                 showAddMethodDialog();
@@ -78,7 +87,7 @@ public class MethodListActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showResetMethodsDialog() {
+    private void showResetMethodsDialog(final String[] methodList) {
         StringBuffer sb = new StringBuffer();
         for (String s : methodList) {
             sb.append(s).append("\n");
