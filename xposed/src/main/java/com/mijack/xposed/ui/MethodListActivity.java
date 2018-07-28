@@ -4,7 +4,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.MessageQueue;
+import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,17 +46,34 @@ public class MethodListActivity extends BaseActivity {
             "android.view.View setOnClickListener android.view.View$OnClickListener"
     };
     private String[] asyncTaskMethodList = new String[]{
-            "android.os.AsyncTask execute [java.langObject",
-            "android.os.AsyncTask publishProgress [java.langObject",
+            "[static] android.os.Message obtain",
+            "android.os.AsyncTask execute [java.lang.Object",
+            "android.os.AsyncTask publishProgress [java.lang.Object",
             "android.os.Handler enqueueMessage android.os.MessageQueue android.os.Message long",
             "android.os.Handler dispatchMessage android.os.Message",
-            "android.os.AsyncTask executeOnExecutor java.util.concurrent.Executor [java.lang.Object"
+            "android.os.AsyncTask executeOnExecutor java.util.concurrent.Executor [java.lang.Object",
+            "android.os.Handler post java.lang.Runnable",
+            "android.os.Handler postAtTime java.lang.Runnable long",
+            "android.os.Handler postAtTime java.lang.Runnable java.lang.Object long",
+            "android.os.Handler postDelayed java.lang.Runnable long",
+            "android.os.Handler postAtFrontOfQueue java.lang.Runnable",
+            "android.os.Handler sendMessage android.os.Message",
+            "android.os.Handler sendEmptyMessage int",
+            "android.os.Handler sendEmptyMessageDelayed int long",
+            "android.os.Handler sendEmptyMessageAtTime int long",
+            "android.os.Handler sendMessageDelayed android.os.Message long",
+            "android.os.Handler sendMessageAtTime android.os.Message long",
+            "android.os.Handler sendMessageAtFrontOfQueue android.os.Message"
+
     };
     private String appName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        Handler handler;
         setContentView(R.layout.activity_method_list);
         appName = getIntent().getStringExtra(APP_NAME);
         setTitle(appName);
