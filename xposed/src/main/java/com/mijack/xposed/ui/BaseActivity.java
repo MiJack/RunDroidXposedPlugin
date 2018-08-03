@@ -11,7 +11,7 @@ import com.mijack.xposed.XposedUtils;
  * @author Mi&Jack
  * @since 2018/7/15
  */
-public abstract class BaseActivity extends Activity implements AdapterView.OnItemLongClickListener {
+public class BaseActivity extends Activity {
 
     public final Context getContext() {
         return this;

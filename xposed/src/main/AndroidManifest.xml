@@ -12,24 +12,29 @@
         android:supportsRtl="true"
         android:testOnly="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.DebugAppListActivity">
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:value="Xposed plugin for DroidStitcher" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="53" />
+
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MethodListActivity"></activity>
-
-        <meta-data
-            android:name="xposedmodule"
-            android:value="true" />
-        <meta-data
-            android:name="xposeddescription"
-            android:value="Hook and log System methods" />
-        <meta-data
-            android:name="xposedminversion"
-            android:value="53" />
+        <activity
+            android:name=".ui.HookSettingActivity"
+            android:label="导入配置" />
+        <activity
+            android:name=".ui.MethodListActivity"
+            android:label="导入配置" />
     </application>
 
 </manifest>

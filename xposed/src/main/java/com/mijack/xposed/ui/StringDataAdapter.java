@@ -38,9 +38,9 @@ public class StringDataAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.item_app, parent, false);
+            convertView = inflater.inflate(R.layout.item_layout, parent, false);
         }
-        TextView tv = convertView.findViewById(R.id.textView);
+        TextView tv = convertView.findViewById(R.id.itemName);
         tv.setText(getItem(position));
         return convertView;
     }

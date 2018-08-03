@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".ui.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="加载配置"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/btnDefaultConfig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="加载默认的配置文件" />
+
+        <Button
+            android:id="@+id/btnSDCardConfig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="从sd选择配置文件"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="基本配置"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Switch
+            android:id="@+id/state_switcher"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clickable="false"
+            android:text="开启状态日志" />
+
+        <Switch
+            android:id="@+id/debug_app_list_switcher"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clickable="false"
+            android:text="打印app列表日志" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="hook 的app 列表"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
