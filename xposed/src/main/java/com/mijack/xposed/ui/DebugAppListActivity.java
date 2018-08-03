@@ -41,7 +41,7 @@ public class DebugAppListActivity extends BaseActivity implements AdapterView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_debug_app_list);
         SharedPreferences sharedPreferences = getSharedPreferences();
         Set<String> appList = sharedPreferences.getStringSet(XposedLoadPackageHook.TARGET_APPS,
                 new HashSet<String>());
